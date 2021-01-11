@@ -37,7 +37,7 @@ export default function Join(props) {
                     <input value={name} placeholder="Name" className="joinInput" type="text" onChange={handleName}  />
                 </div>
                 <div>
-                    <input value={room} placeholder="Room" className="joinInput" type="text" onChange={handleRoom}  />
+                    <input value={room} placeholder="Password" className="joinInput" type="password" onChange={handleRoom}  />
                 </div>
 
                     <button onClick={passName} className={'button mt-20'}>Sign In</button>

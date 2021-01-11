@@ -1,22 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-
+import {Drawer,Menu, MenuItem, Fade,Hidden,Divider,CssBaseline,AppBar,IconButton,List,Toolbar,Typography} from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import Button from '@material-ui/core/Button'
 import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-
-import Typography from '@material-ui/core/Typography';
+import MicIcon from '@material-ui/icons/Mic';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
-
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+import AttachmentIcon from '@material-ui/icons/Attachment';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -49,33 +40,40 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: 0,
+
     },
 }));
 
-function ResponsiveDrawer({window, connectedNames,Messages}) {
+function ResponsiveDrawer({window, connectedNames,Messages,onClick,onChange,value,sendMessagesEnter,room,onSelectFile}) {
 
     const classes = useStyles();
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = React.useState(false);
-
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const openSelect = Boolean(anchorEl);
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
 
+    console.log(onChange);
+
+
     const drawer = (
         <div>
-            <div className={classes.toolbar}/>
+            <div className={classes.toolbar}>
+                <h2 style={{fontSize:'15px',textAlign:'center'}}>{connectedNames.length} people are connected</h2>
+                <h1 style={{textAlign:'center'}}>Room : {room}</h1>
+            </div>
             <Divider/>
             <List>
                 {connectedNames.map((item, index) => {
                     return (
                         <li key={index} className="active">
-                            <div className="d-flex bd-highlight">
                                 <div className="user_info">
-                                    <span>{item.name} <FiberManualRecordIcon className='online_icon'/></span>
-                                    <p>{item.name} is connected</p>
+                                    <span style={{color:'black'}}>{item.name} <FiberManualRecordIcon color='green' className='online_icon'/></span>
+                                    <p  style={{color:'black'}}>{item.name} is connected</p>
                                 </div>
-                            </div>
+
                         </li>
                     )
                 })}
@@ -100,7 +98,43 @@ function ResponsiveDrawer({window, connectedNames,Messages}) {
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <h2>1 people are connected in Room : d</h2>
+                   <Typography variant="h6" style={{flexGrow:1}}>
+                       Chat
+                   </Typography>
+
+                    <input style={{display: 'none'}} id="outlined-button-file" type="file" onChange={onSelectFile}/>
+
+                    <IconButton
+                        aria-controls="fade-menu" aria-haspopup="true"
+                        onClick={(e) => setAnchorEl(e.currentTarget)}
+                        edge="start"
+                    >
+                        <AttachmentIcon fontSize='large' style={{color:'white'}}/>
+                    </IconButton>
+                    <Menu
+                        id="long-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={openSelect}
+                        onClose={() => setAnchorEl(null)}
+                        TransitionComponent={Fade}
+
+                        PaperProps={{
+                            style: {
+                                width: '20ch',
+                            },
+                        }}
+                    >
+                        <label htmlFor="outlined-button-file">
+                            <MenuItem style={{display: 'flex', justifyContent: 'flex-start'}}
+                                      onClick={() => setAnchorEl(null)}> <PhotoCameraIcon style={{marginRight: '10px', color: 'grey'}}/> Photos</MenuItem>
+                        </label>
+
+                    </Menu>
+
+
+
+
                 </Toolbar>
             </AppBar>
             <nav className={classes.drawer} aria-label="mailbox folders">
@@ -135,22 +169,29 @@ function ResponsiveDrawer({window, connectedNames,Messages}) {
             </nav>
             <main className={classes.content}>
                 <div className={classes.toolbar}/>
-                <div className="chat_header">
+                <div className='container'>
+                    <div className="chat_body">
+                        {Messages.map((item, index) => {
+                            return <div key={index}>{item}</div>
+                        })}
 
-                </div>
-                <div className="chat_container">
-                    {Messages.map((item, index) => {
-                        return <div key={index}>{item}</div>
-                    })}
+                    </div>
+                    <div  className="chat_footer">
 
-                </div>
-                <div  className="chat_footer">
-                    <input type="text" id="myInput" placeholder="Send..."/>
-                    <Button className='send_btn'>
-                        <SendIcon fontSize='large'/>
-                    </Button>
+                        <input onKeyPress={sendMessagesEnter}
+                               value={value}
+                               onChange={onChange}
+                               placeholder="Type your message..."/>
+                        <IconButton  onClick={onClick} className='send_btn'>
+                            <SendIcon fontSize='large'/>
+                        </IconButton>
+                        <IconButton  onClick={onClick} className='send_btn'>
+                            <MicIcon fontSize='large'/>
+                        </IconButton>
 
+                    </div>
                 </div>
+
 
             </main>
         </div>
