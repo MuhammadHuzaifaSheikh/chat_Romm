@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import SendIcon from '@material-ui/icons/Send';
 import io from 'socket.io-client';
 import audio from '../sound/whatsapp_incoming.mp3'
 import './Chatt.css'

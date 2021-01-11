@@ -1,6 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Drawer,Menu, MenuItem, Fade,Hidden,Divider,CssBaseline,AppBar,IconButton,List,Toolbar,Typography} from '@material-ui/core';
+import {
+    Drawer,
+    Menu,
+    MenuItem,
+    Fade,
+    Hidden,
+    Divider,
+    CssBaseline,
+    AppBar,
+    IconButton,
+    List,
+    Toolbar,
+    Typography
+} from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import MenuIcon from '@material-ui/icons/Menu';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
@@ -8,6 +21,8 @@ import MicIcon from '@material-ui/icons/Mic';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import AttachmentIcon from '@material-ui/icons/Attachment';
+import VideocamIcon from '@material-ui/icons/Videocam';
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +59,17 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function ResponsiveDrawer({window, connectedNames,Messages,onClick,onChange,value,sendMessagesEnter,room,onSelectFile}) {
+function ResponsiveDrawer({
+                              window,
+                              connectedNames,
+                              Messages,
+                              onClick,
+                              onChange,
+                              value,
+                              sendMessagesEnter,
+                              room,
+                              onSelectFile
+                          }) {
 
     const classes = useStyles();
     const theme = useTheme();
@@ -61,18 +86,19 @@ function ResponsiveDrawer({window, connectedNames,Messages,onClick,onChange,valu
     const drawer = (
         <div>
             <div className={classes.toolbar}>
-                <h2 style={{fontSize:'15px',textAlign:'center'}}>{connectedNames.length} people are connected</h2>
-                <h1 style={{textAlign:'center'}}>Room : {room}</h1>
+                <h2 style={{fontSize: '15px', textAlign: 'center'}}>{connectedNames.length} people are connected</h2>
+                <h1 style={{textAlign: 'center'}}>Room : {room}</h1>
             </div>
             <Divider/>
             <List>
                 {connectedNames.map((item, index) => {
                     return (
                         <li key={index} className="active">
-                                <div className="user_info">
-                                    <span style={{color:'black'}}>{item.name} <FiberManualRecordIcon color='green' className='online_icon'/></span>
-                                    <p  style={{color:'black'}}>{item.name} is connected</p>
-                                </div>
+                            <div className="user_info">
+                                <span style={{color: 'black'}}>{item.name} <FiberManualRecordIcon color='green'
+                                                                                                  className='online_icon'/></span>
+                                <p style={{color: 'black'}}>{item.name} is connected</p>
+                            </div>
 
                         </li>
                     )
@@ -98,9 +124,9 @@ function ResponsiveDrawer({window, connectedNames,Messages,onClick,onChange,valu
                     >
                         <MenuIcon/>
                     </IconButton>
-                   <Typography variant="h6" style={{flexGrow:1}}>
-                       Chat
-                   </Typography>
+                    <Typography variant="h6" style={{flexGrow: 1}}>
+                        Chat
+                    </Typography>
 
                     <input style={{display: 'none'}} id="outlined-button-file" type="file" onChange={onSelectFile}/>
 
@@ -109,7 +135,7 @@ function ResponsiveDrawer({window, connectedNames,Messages,onClick,onChange,valu
                         onClick={(e) => setAnchorEl(e.currentTarget)}
                         edge="start"
                     >
-                        <AttachmentIcon fontSize='large' style={{color:'white'}}/>
+                        <AttachmentIcon fontSize='large' style={{color: 'white'}}/>
                     </IconButton>
                     <Menu
                         id="long-menu"
@@ -127,12 +153,16 @@ function ResponsiveDrawer({window, connectedNames,Messages,onClick,onChange,valu
                     >
                         <label htmlFor="outlined-button-file">
                             <MenuItem style={{display: 'flex', justifyContent: 'flex-start'}}
-                                      onClick={() => setAnchorEl(null)}> <PhotoCameraIcon style={{marginRight: '10px', color: 'grey'}}/> Photos</MenuItem>
+                                      onClick={() => setAnchorEl(null)}> <PhotoCameraIcon
+                                style={{marginRight: '10px', color: 'grey'}}/> Photos
+                            </MenuItem>
+                            <MenuItem style={{display: 'flex', justifyContent: 'flex-start'}}
+                                      onClick={() => setAnchorEl(null)}> <VideocamIcon
+                                style={{marginRight: '10px', color: 'grey'}}/> Video
+                            </MenuItem>
                         </label>
 
                     </Menu>
-
-
 
 
                 </Toolbar>
@@ -176,16 +206,16 @@ function ResponsiveDrawer({window, connectedNames,Messages,onClick,onChange,valu
                         })}
 
                     </div>
-                    <div  className="chat_footer">
+                    <div className="chat_footer">
 
                         <input onKeyPress={sendMessagesEnter}
                                value={value}
                                onChange={onChange}
                                placeholder="Type your message..."/>
-                        <IconButton  onClick={onClick} className='send_btn'>
+                        <IconButton onClick={onClick} className='send_btn'>
                             <SendIcon fontSize='large'/>
                         </IconButton>
-                        <IconButton  onClick={onClick} className='send_btn'>
+                        <IconButton onClick={onClick} className='send_btn'>
                             <MicIcon fontSize='large'/>
                         </IconButton>
 
