@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import Chat from "./componenets/Chat/Chat";
+import Join from "./componenets/join/Join";
+import './App.css'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
 
+} from "react-router-dom";
 function App() {
+  const [name, setName] = useState('');
+  const [room, setRoom] = useState('');
+
+
+  function takeName(name,room) {
+    setName(name)
+    setRoom(room)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+        <Router>
+
+          <Switch>
+            <Route  path="/chat" render={() => {
+              return name&&room ? <Chat room={room} name={name}/> : <Redirect to={'/'}/>
+            }}>
+            </Route>
+            <Route exact path="/" render={() => {
+              return name&&room ?  <Redirect to={'/chat'}/> :<Join  onTakeName={takeName}/>
+            }}>
+            </Route>
+
+          </Switch>
+
+        </Router>
+      </div>
   );
 }
 
