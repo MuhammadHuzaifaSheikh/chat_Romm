@@ -12,7 +12,10 @@ import {
     IconButton,
     List,
     Toolbar,
-    Typography
+    Typography,
+    Dialog,
+    DialogTitle,
+    DialogContent,
 } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -22,7 +25,8 @@ import {makeStyles, useTheme} from '@material-ui/core/styles';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 import VideocamIcon from '@material-ui/icons/Videocam';
-
+import {Recorder} from 'react-voice-recorder'
+import CloseIcon from '@material-ui/icons/Close';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -53,8 +57,8 @@ const useStyles = makeStyles((theme) => ({
         width: drawerWidth,
     },
     content: {
-        flexGrow: 1,
         padding: 0,
+        width: '100%',
 
     },
 }));
@@ -68,7 +72,15 @@ function ResponsiveDrawer({
                               value,
                               sendMessagesEnter,
                               room,
-                              onSelectFile
+                              onSelectFile,
+                              handleClickOpen,
+                              handleClose,
+                              open,
+                              audioDetails,
+                              handleAudioStop,
+                              handleAudioUpload,
+                              handleRest,
+
                           }) {
 
     const classes = useStyles();
@@ -80,7 +92,7 @@ function ResponsiveDrawer({
         setMobileOpen(!mobileOpen);
     };
 
-    console.log(onChange);
+    console.log(open);
 
 
     const drawer = (
@@ -95,7 +107,7 @@ function ResponsiveDrawer({
                     return (
                         <li key={index} className="active">
                             <div className="user_info">
-                                <span style={{color: 'black'}}>{item.name} <FiberManualRecordIcon color='green'
+                                <span style={{color: 'black'}}>{item.name} <FiberManualRecordIcon
                                                                                                   className='online_icon'/></span>
                                 <p style={{color: 'black'}}>{item.name} is connected</p>
                             </div>
@@ -128,7 +140,6 @@ function ResponsiveDrawer({
                         Chat
                     </Typography>
 
-                    <input style={{display: 'none'}} id="outlined-button-file" type="file" onChange={onSelectFile}/>
 
                     <IconButton
                         aria-controls="fade-menu" aria-haspopup="true"
@@ -151,15 +162,22 @@ function ResponsiveDrawer({
                             },
                         }}
                     >
-                        <label htmlFor="outlined-button-file">
+                        <label htmlFor="outlined-button-image">
                             <MenuItem style={{display: 'flex', justifyContent: 'flex-start'}}
                                       onClick={() => setAnchorEl(null)}> <PhotoCameraIcon
                                 style={{marginRight: '10px', color: 'grey'}}/> Photos
                             </MenuItem>
+                            <input style={{display: 'none'}} id="outlined-button-image" type="file"
+                                   onChange={(e)=>onSelectFile(e,'image')}/>
+
+                        </label>
+                        <label htmlFor="outlined-button-video">
                             <MenuItem style={{display: 'flex', justifyContent: 'flex-start'}}
                                       onClick={() => setAnchorEl(null)}> <VideocamIcon
                                 style={{marginRight: '10px', color: 'grey'}}/> Video
                             </MenuItem>
+                            <input style={{display: 'none'}} id="outlined-button-video" type="file"
+                                   onChange={(e)=>onSelectFile(e,'video')}/>
                         </label>
 
                     </Menu>
@@ -215,15 +233,42 @@ function ResponsiveDrawer({
                         <IconButton onClick={onClick} className='send_btn'>
                             <SendIcon fontSize='large'/>
                         </IconButton>
-                        <IconButton onClick={onClick} className='send_btn'>
+                        <IconButton onClick={handleClickOpen} className='send_btn'>
                             <MicIcon fontSize='large'/>
                         </IconButton>
 
                     </div>
+
                 </div>
 
 
             </main>
+
+
+            <Dialog fullWidth onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+                <div className='recorderHeader'>
+                    <DialogTitle  id="customized-dialog-title">
+                        Send Voice
+                    </DialogTitle>
+                    <IconButton onClick={handleClose}>
+                        <CloseIcon/>
+                    </IconButton>
+                </div>
+
+                <DialogContent style={{background: ' #212121'}} dividers>
+                    <Recorder
+                        record={true}
+                        audioURL={audioDetails?.url}
+                        showUIAudio
+                        handleAudioStop={data => handleAudioStop(data)}
+                        handleAudioUpload={data =>audioDetails?.url? handleAudioUpload(data):''}
+                        handleRest={handleRest}
+                    />
+
+                </DialogContent>
+
+            </Dialog>
+
         </div>
     );
 }

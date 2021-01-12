@@ -12,6 +12,7 @@ body,html{
 .container{
     display: flex;
     flex-direction: column;
+    height: 89.7vh;
 }
 .chat_body{
     width: 100%;
@@ -160,4 +161,14 @@ input {
     padding: 10px;
     float: left;
     font-size: 16px;
+}
+
+._1ceqH ._1lB9c{
+    display: none;
+    background: #1A1A1D;
+}
+.recorderHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

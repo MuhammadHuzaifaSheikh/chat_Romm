@@ -2,16 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bd4098f3-8c71-4e8d-b8d6-bbc86f8fc1a3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/componenets/Loader.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/config/Config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintcache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/componenets/Chat/Chat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/componenets/Chat/Chat.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/componenets/Chat/Chatt.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/componenets/Chat/Chatt.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/componenets/Chat/Drawer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/componenets/Chat/Drawer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/componenets/join/Join.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/componenets/join/Join.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +54,8 @@
       <option name="presentableId" value="Default" />
       <updated>1610296425879</updated>
       <workItem from="1610296430144" duration="648000" />
-      <workItem from="1610362343881" duration="17854000" />
+      <workItem from="1610362343881" duration="18397000" />
+      <workItem from="1610439217603" duration="8302000" />
     </task>
     <servers />
   </component>
@@ -76,5 +72,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

@@ -26,15 +26,23 @@ class Chat extends Component {
         loading:false,
         src:'',
         writing:'',
-        progress:0
+        progress:0,
+        open:false,
+        audioDetail:{
+            url: null,
+            blob: null,
+            chunks: null,
+            duration: {h: 0, m: 0, s: 0}
+        }
     }
 
-     onSelectFile = e => {
+     onSelectFile = (e,fileType) => {
         if (e.target.files && e.target.files.length > 0) {
             console.log(e.target.files);
-            if (!e.target.files[0].type.match("image.*")) {
-                alert("Please select image only.");
-            } else {
+            if (!e.target.files[0].type.match(`${fileType}.*`)) {
+                alert(`Please select ${fileType} only.`);
+            }
+            else {
                 this.setState({loading:true})
                 const reader = new FileReader();
                 reader.addEventListener("load", () => {
@@ -44,10 +52,13 @@ class Chat extends Component {
                 reader.readAsDataURL(e.target.files[0], e.target.files[0].name);
 
 
-               this.fileUpload(e.target.files[0],`image/${e.target.files[0].name}`)
+               this.fileUpload(e.target.files[0],`${fileType}/${e.target.files[0].name}`)
 
                 console.log(e.target.files[0]);
             }
+
+
+
 
 
         }
@@ -91,6 +102,41 @@ class Chat extends Component {
     }
 
 
+     handleClickOpen = () => {
+         this.setState({open:true})
+    };
+     handleCloseRecorder = () => {
+         this.setState({open:false})
+        this.handleRest()
+    };
+     handleAudioStop = (data) => {
+        console.log(data.blob.type)
+         this.setState({audioDetail:data})
+    };
+     handleAudioUpload = (file) => {
+        console.log(file);
+
+         this.setState({loading:true,src:file})
+
+
+       this.fileUpload(file,`/audio/audio${Math.random()}`)
+        const reset = {
+            url: null,
+            blob: null,
+            chunks: null,
+            duration: {
+                h: 0,
+                m: 0,
+                s: 0
+            }
+        };
+
+         this.setState({audioDetail:reset})
+    };
+     handleRest = () => {
+        const reset = {url: null, blob: null, chunks: null, duration: {h: 0, m: 0, s: 0}};
+         this.setState({audioDetail:reset})
+    };
     componentDidMount() {
         socket.emit('join_room', this.props.room)
         socket.emit('new_user_joined', {name: this.props.name, room: this.props.room})
@@ -222,7 +268,7 @@ class Chat extends Component {
 
         return (
             <div className="main">
-                    <Drawer onSelectFile={this.onSelectFile} onClick={this.sendMessages} onChange={this.onValue} value={this.state.message} sendMessagesEnter={this.sendMessagesEnter} Messages={this.state.Messages} connectedNames={this.state.connectedNames} room={this.state.room} />
+                    <Drawer handleClickOpen={this.handleClickOpen} handleRest={this.handleRest} handleAudioUpload={this.handleAudioUpload}  handleAudioStop={this.handleAudioStop} audioDetails={this.state.audioDetail} open={this.state.open} handleClose={this.handleCloseRecorder} onSelectFile={this.onSelectFile} onClick={this.sendMessages} onChange={this.onValue} value={this.state.message} sendMessagesEnter={this.sendMessagesEnter} Messages={this.state.Messages} connectedNames={this.state.connectedNames} room={this.state.room} />
 
                 <audio ref={this.myAudio} id='audio' src={audio}> </audio>
 
