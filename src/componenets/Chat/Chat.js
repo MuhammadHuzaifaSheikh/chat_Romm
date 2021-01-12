@@ -4,10 +4,11 @@ import audio from '../sound/whatsapp_incoming.mp3'
 import './Chatt.css'
 import {firebase} from "../../config/Config";
 import {Recorder} from 'react-voice-recorder'
-import {Dialog,DialogContent} from '@material-ui/core'
+import {Dialog, DialogContent} from '@material-ui/core'
 import 'react-voice-recorder/dist/index.css'
 import Drawer from "./Drawer";
 import Loader from '../Loader'
+import MessageContainer from "./MessageContainer";
 
 const socket = io('http://localhost:4000');
 
@@ -22,13 +23,13 @@ class Chat extends Component {
         message: '',
         Messages: [],
         connectedNames: [],
-        room:'',
-        loading:false,
-        src:'',
-        writing:'',
-        progress:0,
-        open:false,
-        audioDetail:{
+        room: '',
+        loading: false,
+        src: '',
+        writing: '',
+        progress: 0,
+        open: false,
+        audioDetail: {
             url: null,
             blob: null,
             chunks: null,
@@ -36,35 +37,31 @@ class Chat extends Component {
         }
     }
 
-     onSelectFile = (e,fileType) => {
+    onSelectFile = (e, fileType) => {
         if (e.target.files && e.target.files.length > 0) {
             console.log(e.target.files);
             if (!e.target.files[0].type.match(`${fileType}.*`)) {
                 alert(`Please select ${fileType} only.`);
-            }
-            else {
-                this.setState({loading:true})
+            } else {
+                this.setState({loading: true})
                 const reader = new FileReader();
                 reader.addEventListener("load", () => {
-                        this.setState({src:reader.result})
+                        this.setState({src: reader.result})
                     }
                 );
                 reader.readAsDataURL(e.target.files[0], e.target.files[0].name);
 
 
-               this.fileUpload(e.target.files[0],`${fileType}/${e.target.files[0].name}`)
+                this.fileUpload(e.target.files[0], `${fileType}/${e.target.files[0].name}`)
 
                 console.log(e.target.files[0]);
             }
 
 
-
-
-
         }
     };
 
-     fileUpload = (file, fileName) => {
+    fileUpload = (file, fileName) => {
         console.log(file);
 
 
@@ -72,7 +69,7 @@ class Chat extends Component {
         uploadTask.on('state_changed', (snapshot) => {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
-            this.setState({progress:Math.floor(progress)})
+            this.setState({progress: Math.floor(progress)})
             switch (snapshot.state) {
                 case firebase.storage.TaskState.PAUSED: // or 'paused'
                     console.log('Upload is paused');
@@ -91,35 +88,37 @@ class Chat extends Component {
                 console.log('File available at', downloadURL);
 
 
-                this.setState({src:downloadURL,loading:false})
+                this.setState({src: downloadURL, loading: false})
                 if (file?.type?.match("image.*")) {
-                    // sendMessage('image', downloadURL);
+                    this.sendMessages('image', downloadURL);
+                } else if (file?.type?.match("video.*")) {
+                    this.sendMessages('video', downloadURL);
                 } else {
-                    // sendMessage('audio', downloadURL);
+                    this.sendMessages('audio', downloadURL);
                 }
             });
         });
     }
 
 
-     handleClickOpen = () => {
-         this.setState({open:true})
+    handleClickOpen = () => {
+        this.setState({open: true})
     };
-     handleCloseRecorder = () => {
-         this.setState({open:false})
+    handleCloseRecorder = () => {
+        this.setState({open: false})
         this.handleRest()
     };
-     handleAudioStop = (data) => {
+    handleAudioStop = (data) => {
         console.log(data.blob.type)
-         this.setState({audioDetail:data})
+        this.setState({audioDetail: data})
     };
-     handleAudioUpload = (file) => {
+    handleAudioUpload = (file) => {
         console.log(file);
 
-         this.setState({loading:true,src:file})
+        this.setState({loading: true, src: file})
 
 
-       this.fileUpload(file,`/audio/audio${Math.random()}`)
+        this.fileUpload(file, `/audio/audio${Math.random()}`)
         const reset = {
             url: null,
             blob: null,
@@ -131,12 +130,13 @@ class Chat extends Component {
             }
         };
 
-         this.setState({audioDetail:reset})
+        this.setState({audioDetail: reset})
     };
-     handleRest = () => {
+    handleRest = () => {
         const reset = {url: null, blob: null, chunks: null, duration: {h: 0, m: 0, s: 0}};
-         this.setState({audioDetail:reset})
+        this.setState({audioDetail: reset})
     };
+
     componentDidMount() {
         socket.emit('join_room', this.props.room)
         socket.emit('new_user_joined', {name: this.props.name, room: this.props.room})
@@ -144,23 +144,19 @@ class Chat extends Component {
 
             let local = this.state.Messages
 
-            let div = <div style={{float: 'left', clear: 'both'}} className="d-flex justify-content-end mb-4">
-                <div className="msg_cotainer">
-                    <span className="name">{receiveMessage.name}</span>
-                    {receiveMessage.message}
-                    <span className="msg_time_send">{receiveMessage.time}</span>
-                </div>
+            let div =<MessageContainer name={receiveMessage.name} message={receiveMessage.message}
+                                       time={receiveMessage.time} type={receiveMessage.type}/>
 
-            </div>
             local.push(div)
             this.audioPlay()
             this.setState({Messages: local})
         });
 
     }
+
     componentWillMount() {
         socket.on('roomData', users => {
-                this.setState({connectedNames: users.users,room:users.room})
+            this.setState({connectedNames: users.users, room: users.room})
         })
         socket.on('some_one_writing', message => {
             this.setState({writing: message.message})
@@ -169,35 +165,23 @@ class Chat extends Component {
 
             let local = this.state.Messages
 
-            let div = <div style={{float: 'left', clear: 'both'}} className="d-flex justify-content-end mb-4">
-                <div className="msg_cotainer">
-                    <span className="name">{receiveMessage.name}</span>
-                    {receiveMessage.message}
-                    <span className="msg_time_send">{receiveMessage.time}</span>
-                </div>
-
-            </div>
+            let div = <MessageContainer name={receiveMessage.name} message={receiveMessage.message}
+                                        time={receiveMessage.time} type={receiveMessage.type}/>
             local.push(div)
-            if (receiveMessage){
+            if (receiveMessage) {
                 this.audioPlay()
 
             }
             this.setState({Messages: local})
         });
         socket.on('roomDataDisconnect', users => {
-            this.setState({connectedNames: users.users,room:users.room})
+            this.setState({connectedNames: users.users, room: users.room})
         })
         socket.on('leave', receiveMessage => {
 
             let local = this.state.Messages
-            let div = <div style={{float: 'left', clear: 'both'}} className="d-flex justify-content-end mb-4">
-                <div className="msg_cotainer">
-                    <span className="name">{receiveMessage.name}</span>
-                    {receiveMessage.message}
-                    <span className="msg_time_send">{receiveMessage.time}</span>
-                </div>
-
-            </div>
+            let div = <MessageContainer name={receiveMessage.name} message={receiveMessage.message}
+                                        time={receiveMessage.time} type={receiveMessage.type}/>
             local.push(div)
 
 
@@ -207,14 +191,8 @@ class Chat extends Component {
         socket.on('receiveMessage', receiveMessage => {
 
             let local = this.state.Messages
-            let div = <div style={{float: 'left', clear: 'both'}} className="d-flex justify-content-end mb-4">
-                <div className="msg_cotainer">
-                    <span className="name">{receiveMessage.name}</span>
-                    {receiveMessage.message}
-                    <span className="msg_time_send">{receiveMessage.time}</span>
-                </div>
-
-            </div>
+            let div = <MessageContainer name={receiveMessage.name} message={receiveMessage.message}
+                                        time={receiveMessage.time} type={receiveMessage.type}/>
             local.push(div)
             this.audioPlay()
             this.setState({Messages: local})
@@ -228,47 +206,47 @@ class Chat extends Component {
         this.setState({message: e.target.value})
         console.log(e);
     }
-    sendMessages = () => {
-        this.setState({writing:'',})
+    sendMessages = (type, message) => {
+        this.setState({writing: '',})
 
         socket.emit('sendMessage', {
-            message: this.state.message,
+            message: message,
             time: new Date().toLocaleTimeString(),
             name: this.props.name,
-            room: this.props.room
+            room: this.props.room,
+            type: type,
         })
         let local = this.state.Messages
-        let div = <div style={{float: 'right', clear: 'both'}} className="d-flex justify-content-end mb-4">
-            <div className="msg_cotainer_send">
-                <span className="name">{this.props.name}</span>
-                {this.state.message}
-                <span className="msg_time_send">{new Date().toLocaleTimeString()}</span>
-            </div>
-
-        </div>
+        let div = <MessageContainer name={this.props.name} message={message} time={new Date().toLocaleTimeString()}  type={type} mine/>
         local.push(div)
         this.setState({Messages: local})
         this.setState({message: ''})
     }
     sendMessagesEnter = (e) => {
         if (e.key === 'Enter') {
-            this.sendMessages()
+            this.sendMessages('text', this.state.message)
         }
-        socket.emit('writing','user');
-        this.setState({writing:''})
+        socket.emit('writing', 'user');
+        this.setState({writing: ''})
 
     }
     audioPlay = () => {
-            this.myAudio.current.play();
+        this.myAudio.current.play();
     }
 
     render() {
 
-         let {loading,src,progress}= this.state
+        let {loading, src, progress} = this.state
 
         return (
             <div className="main">
-                    <Drawer handleClickOpen={this.handleClickOpen} handleRest={this.handleRest} handleAudioUpload={this.handleAudioUpload}  handleAudioStop={this.handleAudioStop} audioDetails={this.state.audioDetail} open={this.state.open} handleClose={this.handleCloseRecorder} onSelectFile={this.onSelectFile} onClick={this.sendMessages} onChange={this.onValue} value={this.state.message} sendMessagesEnter={this.sendMessagesEnter} Messages={this.state.Messages} connectedNames={this.state.connectedNames} room={this.state.room} />
+                <Drawer handleClickOpen={this.handleClickOpen} handleRest={this.handleRest}
+                        handleAudioUpload={this.handleAudioUpload} handleAudioStop={this.handleAudioStop}
+                        audioDetails={this.state.audioDetail} open={this.state.open}
+                        handleClose={this.handleCloseRecorder} onSelectFile={this.onSelectFile}
+                        sendMessages={this.sendMessages} onChange={this.onValue} value={this.state.message}
+                        sendMessagesEnter={this.sendMessagesEnter} Messages={this.state.Messages}
+                        connectedNames={this.state.connectedNames} room={this.state.room}/>
 
                 <audio ref={this.myAudio} id='audio' src={audio}> </audio>
 
@@ -277,8 +255,8 @@ class Chat extends Component {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description">
                     <DialogContent style={{textAlign: "center", paddingTop: "30px"}}>
-                        {src?
-                            <Loader  value={progress}/>
+                        {src ?
+                            <Loader value={progress}/>
                             :
                             <img style={{width: '60px', height: '60px'}} src="https://i.gifer.com/ZZ5H.gif" alt=""/>
 

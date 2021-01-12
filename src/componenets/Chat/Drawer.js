@@ -17,6 +17,8 @@ import {
     DialogTitle,
     DialogContent,
 } from '@material-ui/core';
+import SimpleReactLightbox, {SRLWrapper} from 'simple-react-lightbox'
+
 import SendIcon from '@material-ui/icons/Send';
 import MenuIcon from '@material-ui/icons/Menu';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
@@ -27,8 +29,29 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import {Recorder} from 'react-voice-recorder'
 import CloseIcon from '@material-ui/icons/Close';
+
 const drawerWidth = 240;
 
+
+const options = {
+    settings: {
+        autoplaySpeed: 1500,
+        transitionSpeed: 900,
+    },
+    buttons: {
+        backgroundColor: 'rgba(30,30,36,0.8)',
+        iconColor: 'rgba(255, 255, 255, 0.8)',
+        iconPadding: '5px',
+        showAutoplayButton: true,
+        showCloseButton: true,
+        showDownloadButton: true,
+        showFullscreenButton: true,
+        showNextButton: true,
+        showPrevButton: true,
+        size: '40px'
+    }
+
+};
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -57,7 +80,10 @@ const useStyles = makeStyles((theme) => ({
         width: drawerWidth,
     },
     content: {
-        padding: 0,
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        background: '#f5f5f5',
         width: '100%',
 
     },
@@ -80,6 +106,7 @@ function ResponsiveDrawer({
                               handleAudioStop,
                               handleAudioUpload,
                               handleRest,
+                              sendMessages,
 
                           }) {
 
@@ -108,7 +135,7 @@ function ResponsiveDrawer({
                         <li key={index} className="active">
                             <div className="user_info">
                                 <span style={{color: 'black'}}>{item.name} <FiberManualRecordIcon
-                                                                                                  className='online_icon'/></span>
+                                    className='online_icon'/></span>
                                 <p style={{color: 'black'}}>{item.name} is connected</p>
                             </div>
 
@@ -137,7 +164,7 @@ function ResponsiveDrawer({
                         <MenuIcon/>
                     </IconButton>
                     <Typography variant="h6" style={{flexGrow: 1}}>
-                        Chat
+                        Hand Book
                     </Typography>
 
 
@@ -168,7 +195,7 @@ function ResponsiveDrawer({
                                 style={{marginRight: '10px', color: 'grey'}}/> Photos
                             </MenuItem>
                             <input style={{display: 'none'}} id="outlined-button-image" type="file"
-                                   onChange={(e)=>onSelectFile(e,'image')}/>
+                                   onChange={(e) => onSelectFile(e, 'image')}/>
 
                         </label>
                         <label htmlFor="outlined-button-video">
@@ -177,7 +204,7 @@ function ResponsiveDrawer({
                                 style={{marginRight: '10px', color: 'grey'}}/> Video
                             </MenuItem>
                             <input style={{display: 'none'}} id="outlined-button-video" type="file"
-                                   onChange={(e)=>onSelectFile(e,'video')}/>
+                                   onChange={(e) => onSelectFile(e, 'video')}/>
                         </label>
 
                     </Menu>
@@ -215,39 +242,37 @@ function ResponsiveDrawer({
                     </Drawer>
                 </Hidden>
             </nav>
-            <main className={classes.content}>
-                <div className={classes.toolbar}/>
-                <div className='container'>
-                    <div className="chat_body">
-                        {Messages.map((item, index) => {
-                            return <div key={index}>{item}</div>
-                        })}
-
-                    </div>
-                    <div className="chat_footer">
-
-                        <input onKeyPress={sendMessagesEnter}
-                               value={value}
-                               onChange={onChange}
-                               placeholder="Type your message..."/>
-                        <IconButton onClick={onClick} className='send_btn'>
-                            <SendIcon fontSize='large'/>
-                        </IconButton>
-                        <IconButton onClick={handleClickOpen} className='send_btn'>
-                            <MicIcon fontSize='large'/>
-                        </IconButton>
-
-                    </div>
+            <div className={classes.content}>
+                <div className="chat_body">
+                    <SimpleReactLightbox>
+                        <SRLWrapper options={options}>
+                            {Messages.map((item, index) => {
+                                return <div key={index}>{item}</div>
+                            })}
+                        </SRLWrapper>
+                    </SimpleReactLightbox>
 
                 </div>
+                <div className="chat_footer">
 
+                    <input onKeyPress={sendMessagesEnter}
+                           value={value}
+                           onChange={onChange}
+                           placeholder="Type your message..."/>
+                    <IconButton onClick={() => sendMessages('text', value)} className='send_btn'>
+                        <SendIcon fontSize='large'/>
+                    </IconButton>
+                    <IconButton onClick={handleClickOpen} className='send_btn'>
+                        <MicIcon fontSize='large'/>
+                    </IconButton>
 
-            </main>
+                </div>
+            </div>
 
 
             <Dialog fullWidth onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
                 <div className='recorderHeader'>
-                    <DialogTitle  id="customized-dialog-title">
+                    <DialogTitle id="customized-dialog-title">
                         Send Voice
                     </DialogTitle>
                     <IconButton onClick={handleClose}>
@@ -261,7 +286,7 @@ function ResponsiveDrawer({
                         audioURL={audioDetails?.url}
                         showUIAudio
                         handleAudioStop={data => handleAudioStop(data)}
-                        handleAudioUpload={data =>audioDetails?.url? handleAudioUpload(data):''}
+                        handleAudioUpload={data => audioDetails?.url ? handleAudioUpload(data) : ''}
                         handleRest={handleRest}
                     />
 
