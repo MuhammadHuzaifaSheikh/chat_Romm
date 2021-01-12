@@ -119,7 +119,6 @@ function ResponsiveDrawer({
         setMobileOpen(!mobileOpen);
     };
 
-    console.log(open);
 
 
     const drawer = (

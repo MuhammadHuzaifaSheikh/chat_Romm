@@ -9,8 +9,7 @@ import 'react-voice-recorder/dist/index.css'
 import Drawer from "./Drawer";
 import Loader from '../Loader'
 import MessageContainer from "./MessageContainer";
-
-const socket = io('http://localhost:4000');
+const socket = io('https://chatapprealtimeio.herokuapp.com/');
 
 
 var storageRef = firebase.storage().ref();
@@ -140,7 +139,24 @@ class Chat extends Component {
     componentDidMount() {
         socket.emit('join_room', this.props.room)
         socket.emit('new_user_joined', {name: this.props.name, room: this.props.room})
+
+        this.state.connectedNames.forEach((item)=>{
+            if (item.name===this.props.name){
+                window.location.reload();
+                console.log('match hogia');
+            }
+            else {
+                console.log('match nahi hoga');
+            }
+
+        })
+        socket.on('sameNameError',errorMessage=>{
+            alert(errorMessage);
+            window.location.reload();
+
+        })
         socket.on('welcome', receiveMessage => {
+            console.log(this.state.connectedNames);
 
             let local = this.state.Messages
 
@@ -155,6 +171,7 @@ class Chat extends Component {
     }
 
     componentWillMount() {
+
         socket.on('roomData', users => {
             this.setState({connectedNames: users.users, room: users.room})
         })
@@ -209,18 +226,26 @@ class Chat extends Component {
     sendMessages = (type, message) => {
         this.setState({writing: '',})
 
-        socket.emit('sendMessage', {
-            message: message,
-            time: new Date().toLocaleTimeString(),
-            name: this.props.name,
-            room: this.props.room,
-            type: type,
-        })
-        let local = this.state.Messages
-        let div = <MessageContainer name={this.props.name} message={message} time={new Date().toLocaleTimeString()}  type={type} mine/>
-        local.push(div)
-        this.setState({Messages: local})
-        this.setState({message: ''})
+        if (message){
+            socket.emit('sendMessage', {
+                message: message,
+                time: new Date().toLocaleTimeString(),
+                name: this.props.name,
+                room: this.props.room,
+                type: type,
+            })
+            let local = this.state.Messages
+            let div = <MessageContainer name={this.props.name} message={message} time={new Date().toLocaleTimeString()}  type={type} mine/>
+            local.push(div)
+            this.setState({Messages: local})
+            this.setState({message: ''})
+        }
+        else {
+            alert(`Please select a ${type}`)
+
+        }
+
+
     }
     sendMessagesEnter = (e) => {
         if (e.key === 'Enter') {

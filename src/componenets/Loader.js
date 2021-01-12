@@ -68,7 +68,6 @@ function FacebookCircularProgress(props) {
 const useStyles = makeStyles({
     root: {
         flexGrow: 1,
-        width:'500px',
     },
 });
 
@@ -81,7 +80,7 @@ export default function CustomizedProgressBars({value}) {
             <br />
             <BorderLinearProgress variant="determinate" value={value} />
             <Typography>
-                {value}
+                {value} %
             </Typography>
         </div>
     );

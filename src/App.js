@@ -18,13 +18,14 @@ function App() {
     setName(name)
     setRoom(room)
   }
+
   return (
       <div>
         <Router>
 
           <Switch>
             <Route  path="/chat" render={() => {
-              return name&&room ? <Chat room={room} name={name}/> : <Redirect to={'/'}/>
+              return name&&room ? <Chat  room={room} name={name}/> : <Redirect to={'/'}/>
             }}>
             </Route>
             <Route exact path="/" render={() => {
