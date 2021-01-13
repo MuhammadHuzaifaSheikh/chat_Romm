@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useRef,useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {
     Drawer,
@@ -18,6 +18,7 @@ import {
     DialogContent,
 } from '@material-ui/core';
 import SimpleReactLightbox, {SRLWrapper} from 'simple-react-lightbox'
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 import SendIcon from '@material-ui/icons/Send';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -118,6 +119,9 @@ function ResponsiveDrawer({
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+
+
+
 
 
 
@@ -242,16 +246,18 @@ function ResponsiveDrawer({
                 </Hidden>
             </nav>
             <div className={classes.content}>
-                <div className="chat_body">
+                    <ScrollToBottom className={'chat_body'}>
+
                     <SimpleReactLightbox>
                         <SRLWrapper options={options}>
                             {Messages.map((item, index) => {
-                                return <div key={index}>{item}</div>
+                                return <div   key={index}>{item}</div>
                             })}
                         </SRLWrapper>
                     </SimpleReactLightbox>
+                    </ScrollToBottom>
 
-                </div>
+
                 <div className="chat_footer">
 
                     <input onKeyPress={sendMessagesEnter}

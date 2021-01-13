@@ -32,9 +32,13 @@ export default function Join(props) {
     return (
         <div className="joinOuterContainer">
             <div className="joinInnerContainer">
-                <h1 className="heading">Join</h1>
+                <h1 className="heading">
+                    H
+                    <span className='text'>Hand Book</span>
+                </h1>
+
                 <div>
-                    <input value={name} placeholder="Name" className="joinInput" type="text" onChange={handleName}  />
+                    <input  value={name} placeholder="Name" className="joinInput" type="text" onChange={handleName}  />
                 </div>
                 <div>
                     <input value={room} placeholder="Password" className="joinInput" type="password" onChange={handleRoom}  />

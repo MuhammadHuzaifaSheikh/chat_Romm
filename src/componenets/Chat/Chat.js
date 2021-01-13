@@ -38,7 +38,6 @@ class Chat extends Component {
 
     onSelectFile = (e, fileType) => {
         if (e.target.files && e.target.files.length > 0) {
-            console.log(e.target.files);
             if (!e.target.files[0].type.match(`${fileType}.*`)) {
                 alert(`Please select ${fileType} only.`);
             } else {
@@ -53,7 +52,6 @@ class Chat extends Component {
 
                 this.fileUpload(e.target.files[0], `${fileType}/${e.target.files[0].name}`)
 
-                console.log(e.target.files[0]);
             }
 
 
@@ -61,21 +59,17 @@ class Chat extends Component {
     };
 
     fileUpload = (file, fileName) => {
-        console.log(file);
 
 
         var uploadTask = storageRef.child('chat/' + fileName).put(file);
         uploadTask.on('state_changed', (snapshot) => {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
             this.setState({progress: Math.floor(progress)})
             switch (snapshot.state) {
                 case firebase.storage.TaskState.PAUSED: // or 'paused'
-                    console.log('Upload is paused');
                     alert('Upload is paused')
                     break;
                 case firebase.storage.TaskState.RUNNING: // or 'running'
-                    console.log('Upload is running');
                     break;
             }
         }, (error) => {
@@ -84,7 +78,6 @@ class Chat extends Component {
             // Handle successful uploads on complete
             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                console.log('File available at', downloadURL);
 
 
                 this.setState({src: downloadURL, loading: false})
@@ -108,11 +101,9 @@ class Chat extends Component {
         this.handleRest()
     };
     handleAudioStop = (data) => {
-        console.log(data.blob.type)
         this.setState({audioDetail: data})
     };
     handleAudioUpload = (file) => {
-        console.log(file);
 
         this.setState({loading: true, src: file})
 
@@ -140,23 +131,13 @@ class Chat extends Component {
         socket.emit('join_room', this.props.room)
         socket.emit('new_user_joined', {name: this.props.name, room: this.props.room})
 
-        this.state.connectedNames.forEach((item)=>{
-            if (item.name===this.props.name){
-                window.location.reload();
-                console.log('match hogia');
-            }
-            else {
-                console.log('match nahi hoga');
-            }
 
-        })
         socket.on('sameNameError',errorMessage=>{
             alert(errorMessage);
             window.location.reload();
 
         })
         socket.on('welcome', receiveMessage => {
-            console.log(this.state.connectedNames);
 
             let local = this.state.Messages
 
@@ -221,7 +202,6 @@ class Chat extends Component {
 
     onValue = (e) => {
         this.setState({message: e.target.value})
-        console.log(e);
     }
     sendMessages = (type, message) => {
         this.setState({writing: '',})

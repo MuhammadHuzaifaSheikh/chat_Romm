@@ -2,8 +2,6 @@ import React from "react";
 
 
 function MessageContainer({name, message, type, mine, time}) {
-    let a = {name, message, type, mine, time}
-    console.log(a);
 
     function Message() {
 
