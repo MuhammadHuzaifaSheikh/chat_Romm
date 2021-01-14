@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import './join.css';
-
+import background from '../../image/background.jpeg'
 export default function Join(props) {
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
@@ -30,7 +30,7 @@ export default function Join(props) {
 
 
     return (
-        <div className="joinOuterContainer">
+        <div style={{    backgroundImage: `linear-gradient(rgba(9,132,227,0.9) ,rgba(9,132,227,0.7),rgba(0,0,0,0.8)),url(${background})`}} className="joinOuterContainer">
             <div className="joinInnerContainer">
                 <h1 className="heading">
                     H
