@@ -9,7 +9,7 @@ import 'react-voice-recorder/dist/index.css'
 import Drawer from "./Drawer";
 import Loader from '../Loader'
 import MessageContainer from "./MessageContainer";
-const socket = io('https://chatapprealtimeio.herokuapp.com/');
+const socket = io('https://chat-app-real-time-handbook.herokuapp.com/');
 
 
 var storageRef = firebase.storage().ref();

@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bd4098f3-8c71-4e8d-b8d6-bbc86f8fc1a3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintcache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/componenets/join/Join.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/componenets/join/Join.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/componenets/join/join.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/componenets/join/join.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/Config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/Config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/componenets/Chat/Chat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/componenets/Chat/Chat.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
